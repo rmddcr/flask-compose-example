@@ -1,0 +1,92 @@
+---
+- hosts: server
+  become: true
+
+  tasks:
+    - name: Install aptitude
+      apt:
+        name: aptitude
+        state: latest
+        update_cache: true
+
+    - name: Install required system packages
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+          - gnupg-agent
+        state: latest
+        update_cache: true
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Install Docker
+      apt:
+        name: "{{ packages }}"
+        state: present
+        update_cache: yes
+      vars:
+        packages:
+        - docker-ce
+        - docker-ce-cli 
+        - containerd.io
+
+    - name: Add user to docker group
+      user:
+        name: "ubuntu"
+        group: "docker"
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+
+    - name: Install Docker compose Module for Python
+      pip:
+        name: docker-compose
+        
+    - name: Install docker-compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.26.0/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: '+x'
+
+    - name: Check docker-compose exists
+      stat: path=~/docker-compose
+      register: docker_compose
+
+    - name: Move docker-compose to /usr/local/bin/docker-compose
+      command: mv ~/docker-compose /usr/local/bin/docker-compose
+      when: docker_compose.stat.exists
+
+    - name: Create directory
+      file:
+        path: /home/ubuntu/application
+        state: directory
+        mode: '0755'
+
+    - name: Git checkout
+      ansible.builtin.git:
+        repo: 'https://github.com/rmddcr/flask-compose-example.git'
+        dest: /home/ubuntu/application
+
+    - name: Create and start services
+      community.docker.docker_compose:
+        project_src: /home/ubuntu/application
+      register: output
+
+    - ansible.builtin.debug:
+        var: output
+
