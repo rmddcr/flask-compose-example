@@ -1,17 +1,22 @@
-Flask-compose-example
-========================================
+# Flask-compose-example
 
-This repository is an example that shows how to use ansible to setup flask application using apache and docker compose.
+
+This repository is an example showing how to use ansible to setup flask application using apache and docker compose.
 
 Getting Started
 ---------------
 
-Update the inventry file with correct values
-To get started testing with this repository, run:
+### Prerequisite
 
-.. code-block:: bash
+- **Ansible 2.9+**
+- **sshpass**
 
-   $ pip install ansible
-   
-   $ ansible-playbook -i ./inventory play-book.yml
+Update the inventory file with correct server ip and its password
+To get started testing with this repository, 
+
+#### Setting up the server
+
+Run the fallowing server to setup the remote server
+
+```ansible-playbook -i ./inventory play-book.yml```
 
