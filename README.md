@@ -12,5 +12,6 @@ To get started testing with this repository, run:
 .. code-block:: bash
 
    $ pip install ansible
+   
    $ ansible-playbook -i ./inventory play-book.yml
 
