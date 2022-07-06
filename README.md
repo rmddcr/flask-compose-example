@@ -11,7 +11,7 @@ Getting Started
 - **sshpass**
 
 Update the inventory file with correct server ip and its password
-To get started testing with this repository,
+To get started setting up the sample application.
 
 #### Setting up the server
 
