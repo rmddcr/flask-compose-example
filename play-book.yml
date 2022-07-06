@@ -82,6 +82,11 @@
         repo: 'https://github.com/rmddcr/flask-compose-example.git'
         dest: /home/ubuntu/application
 
+    - name: Tear down existing services
+      community.docker.docker_compose:
+        project_src: flask
+        state: absent
+        
     - name: Create and start services
       community.docker.docker_compose:
         project_src: /home/ubuntu/application
