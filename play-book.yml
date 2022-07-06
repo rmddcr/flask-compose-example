@@ -84,7 +84,7 @@
 
     - name: Tear down existing services
       community.docker.docker_compose:
-        project_src: flask
+        project_src: /home/ubuntu/application
         state: absent
         
     - name: Create and start services
